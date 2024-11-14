@@ -92,7 +92,7 @@ func (ArticleApi) ArticleUpdateView(c *gin.Context) {
 		Do(context.Background())
 	if err != nil {
 		logrus.Error(err.Error())
-		res.FailWithMessage("更新失败", c)
+		res.FailWithMessage("更新失败,再来", c)
 		return
 	}
 	res.OkWithMessage("更新成功，好耶", c)
