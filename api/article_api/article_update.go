@@ -95,5 +95,5 @@ func (ArticleApi) ArticleUpdateView(c *gin.Context) {
 		res.FailWithMessage("更新失败", c)
 		return
 	}
-	res.OkWithMessage("更新成功", c)
+	res.OkWithMessage("更新成功，好耶", c)
 }
