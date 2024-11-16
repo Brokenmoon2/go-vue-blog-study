@@ -54,6 +54,12 @@ func (ArticleApi) ArticleUpdateView(c *gin.Context) {
 		BannerUrl: bannerUrl,
 		Tags:      cr.Tags,
 	}
+	err = article.GetDataByID(cr.ID)
+	if err != nil {
+		global.Log.Error(err)
+		res.FailWithMessage("文章不存在", c)
+		return
+	}
 
 	maps := structs.Map(&article)
 	var DataMap = map[string]any{}
