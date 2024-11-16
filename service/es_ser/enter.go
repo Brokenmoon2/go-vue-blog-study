@@ -8,6 +8,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"go-vue-blog-study/global"
 	"go-vue-blog-study/models"
+	"go-vue-blog-study/service/redis_ser"
 	"strings"
 )
 
@@ -76,6 +77,8 @@ func CommList(option Option) (list []models.ArticleModel, count int, err error) 
 	}
 	count = int(res.Hits.TotalHits.Value) //搜索到结果总条数
 	demoList := []models.ArticleModel{}
+
+	diggInfo := redis_ser.GetDiggInfo()
 	for _, hit := range res.Hits.Hits {
 		var model models.ArticleModel
 		data, err := hit.Source.MarshalJSON()
@@ -94,6 +97,9 @@ func CommList(option Option) (list []models.ArticleModel, count int, err error) 
 		}
 
 		model.ID = hit.Id
+		digg := diggInfo[hit.Id]
+		model.DiggCount = model.DiggCount + digg
+
 		demoList = append(demoList, model)
 	}
 	return demoList, count, err

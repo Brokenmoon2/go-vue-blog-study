@@ -2,6 +2,7 @@ package article_api
 
 import (
 	"github.com/gin-gonic/gin"
+	"go-vue-blog-study/models"
 	"go-vue-blog-study/models/res"
 	"go-vue-blog-study/service/es_ser"
 )
@@ -11,7 +12,7 @@ type ESIDRequest struct {
 }
 
 func (ArticleApi) ArticleDetailView(c *gin.Context) {
-	var cr ESIDRequest
+	var cr models.ESIDRequest
 	err := c.ShouldBindUri(&cr)
 	if err != nil {
 		res.FailWithCode(res.ArgumentError, c)
