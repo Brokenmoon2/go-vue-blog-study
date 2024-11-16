@@ -8,32 +8,70 @@ import (
 	"github.com/sirupsen/logrus"
 	"go-vue-blog-study/global"
 	"go-vue-blog-study/models"
+	"strings"
 )
 
-func CommList(key string, page, limit int) (list []models.ArticleModel, count int, err error) {
+type Option struct {
+	models.PageInfo
+	Fields []string
+	Tag    string
+}
+
+func (o *Option) GetForm() int {
+	if o.Page == 0 {
+		o.Page = 1
+	}
+	if o.Limit == 0 {
+		o.Limit = 10
+	}
+	return (o.Page - 1) * o.Limit
+}
+
+func CommList(option Option) (list []models.ArticleModel, count int, err error) {
 
 	boolSearch := elastic.NewBoolQuery()
-	from := page
-	if key != "" {
+
+	if option.Key != "" {
 		boolSearch.Must(
-			elastic.NewMatchQuery("title", key),
+			elastic.NewMultiMatchQuery(option.Key, option.Fields...),
 		)
 	}
-	if limit == 0 {
-		limit = 10
+	if option.Tag != "" {
+		boolSearch.Must(
+			elastic.NewMultiMatchQuery(option.Tag, "tags"),
+		)
 	}
-	if from == 0 {
-		from = 1
+
+	type SortField struct {
+		Field     string
+		Ascending bool
+	}
+	sortField := SortField{
+		Field:     "created_at",
+		Ascending: false, // 从小到大  从大到小
+	}
+	if option.Sort != "" {
+		_list := strings.Split(option.Sort, " ")
+		if len(_list) == 2 && (_list[1] == "desc" || _list[1] == "asc") {
+			sortField.Field = _list[0]
+			if _list[1] == "desc" {
+				sortField.Ascending = false
+			}
+			if _list[1] == "asc" {
+				sortField.Ascending = true
+			}
+		}
 	}
 
 	res, err := global.ESClient.
 		Search(models.ArticleModel{}.Index()).
 		Query(boolSearch).
-		From((from - 1) * limit).
-		Size(limit).
+		Highlight(elastic.NewHighlight().Field("title")).
+		From(option.GetForm()).
+		Sort(sortField.Field, sortField.Ascending).
+		Size(option.Limit).
 		Do(context.Background())
 	if err != nil {
-		logrus.Error(err.Error())
 		return
 	}
 	count = int(res.Hits.TotalHits.Value) //搜索到结果总条数
@@ -50,20 +88,26 @@ func CommList(key string, page, limit int) (list []models.ArticleModel, count in
 			logrus.Error(err)
 			continue
 		}
+		title, ok := hit.Highlight["title"]
+		if ok {
+			model.Title = title[0]
+		}
+
 		model.ID = hit.Id
 		demoList = append(demoList, model)
 	}
 	return demoList, count, err
 }
+
 func CommDetail(id string) (model models.ArticleModel, err error) {
-	res, err := global.ESClient.Get(). //调用全局变量 ESClient 的 Get() 方法
-						Index(models.ArticleModel{}.Index()). //获取 ArticleModel 模型所在的索引名称的方法
-						Id(id).                               //设置要查询的文档 ID
-						Do(context.Background())              //Do执行查询请求。context.Background() 是上下文对象
+	res, err := global.ESClient.Get().
+		Index(models.ArticleModel{}.Index()).
+		Id(id).
+		Do(context.Background())
 	if err != nil {
 		return
 	}
-	err = json.Unmarshal(res.Source, &model) //将 res.Source 中的 JSON 数据解码并填充到 model 结构体中，就是传入数据而已
+	err = json.Unmarshal(res.Source, &model)
 	if err != nil {
 		return
 	}
