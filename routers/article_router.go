@@ -14,4 +14,5 @@ func (router RouterGroup) ArticleRouter() {
 	router.GET("articles/calendar", app.ArticleCalendarView)
 	router.PUT("articles", app.ArticleUpdateView)
 	router.GET("articles/tags", app.ArticleTagListView)
+	router.DELETE("articles", app.ArticleRemoveView)
 }

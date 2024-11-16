@@ -38,13 +38,11 @@ type ArticleModel struct {
 	Tags ctype.Array `json:"tags" structs:"tags"` // 文章标签
 }
 
-//（ArticleModel）是一个简单的数据模型，适用于非关系型数据库（如 Elasticsearch），包含了文章的基本字段，并且没有显式的关系模型。解绑关系
-
 func (ArticleModel) Index() string {
 	return "article_index"
-} //告诉 Elasticsearch 这个模型的数据将存储在名为 article_index 的索引中。
+}
 
-func (ArticleModel) Mapping() string { //返回一个 JSON 格式的字符串，定义了 Elasticsearch 中的索引的 设置（settings） 和 映射（mappings） 配置。
+func (ArticleModel) Mapping() string {
 	return `
 {
   "settings": {
@@ -119,15 +117,13 @@ func (ArticleModel) Mapping() string { //返回一个 JSON 格式的字符串，
   }
 }
 `
-} //mappings：指定了索引中每个字段的类型。mappings 用于定义字段的数据类型，Elasticsearch 会根据这些定义对字段进行索引，确保能够高效地执行查询和聚合。
+}
 
 // IndexExists 索引是否存在
-func (a ArticleModel) IndexExists() bool { //检查 Elasticsearch 中指定索引是否存在。
-	//a 是方法的 接收者，它不是从外部传入的参数。它代表调用该方法的对象实例，通过它，方法可以访问该对象的字段和调用其其他方法。它表示该方法是属于 ArticleModel 类型的实例的
-	//a通过结构体ArticleModel传入数据
+func (a ArticleModel) IndexExists() bool {
 	exists, err := global.ESClient.
 		IndexExists(a.Index()).
-		Do(context.Background()) //是用于执行某个操作（如查询、请求等），并且传入一个空的上下文
+		Do(context.Background())
 	if err != nil {
 		logrus.Error(err.Error())
 		return exists
@@ -144,9 +140,9 @@ func (a ArticleModel) CreateIndex() error {
 	// 没有索引
 	// 创建索引
 	createIndex, err := global.ESClient.
-		CreateIndex(a.Index()).  //a.Index() 提供了索引的名称（如 "article_index"）。
-		BodyString(a.Mapping()). //a.Mapping() 提供了该索引的映射配置，定义了索引中的字段和数据类型。
-		Do(context.Background()) //执行创建索引操作并等待响应。
+		CreateIndex(a.Index()).
+		BodyString(a.Mapping()).
+		Do(context.Background())
 	if err != nil {
 		logrus.Error("创建索引失败")
 		logrus.Error(err.Error())
@@ -174,7 +170,7 @@ func (a ArticleModel) RemoveIndex() error {
 		logrus.Error("删除索引失败")
 		return err
 	}
-	logrus.Info("索引删除成功") //logrus输出 信息级别 的日志。
+	logrus.Info("索引删除成功")
 	return nil
 }
 
@@ -189,6 +185,7 @@ func (a ArticleModel) Create() (err error) {
 	}
 	a.ID = indexResponse.Id
 	return nil
+
 }
 
 // ISExistData 是否存在该文章
@@ -207,7 +204,6 @@ func (a ArticleModel) ISExistData() bool {
 	}
 	return false
 }
-
 func (a *ArticleModel) GetDataByID(id string) error {
 	res, err := global.ESClient.
 		Get().
