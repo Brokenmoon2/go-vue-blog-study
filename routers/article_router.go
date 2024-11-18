@@ -16,4 +16,6 @@ func (router RouterGroup) ArticleRouter() {
 	router.GET("articles/tags", app.ArticleTagListView)
 	router.DELETE("articles", app.ArticleRemoveView)
 	router.POST("articles/collects", middleware.JwtAuth(), app.ArticleCollCreateView)
+	router.GET("articles/collects", middleware.JwtAuth(), app.ArticleCollListView)
+	router.DELETE("articles/collects", middleware.JwtAuth(), app.ArticleCollBatchRemoveView)
 }

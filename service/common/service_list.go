@@ -22,7 +22,7 @@ func ComList[T any](model T, option Option) (list []T, count int64, err error) {
 	}
 	query := DB.Where(model)
 
-	count = query.Select("id").Find(&list).RowsAffected
+	count = query.Find(&list).RowsAffected
 	// 这里的query会受上面查询的影响，需要手动复位
 	query = DB.Where(model)
 	offset := (option.Page - 1) * option.Limit
