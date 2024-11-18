@@ -5,6 +5,7 @@ import (
 	"go-vue-blog-study/models"
 	"go-vue-blog-study/models/res"
 	"go-vue-blog-study/service/es_ser"
+	"go-vue-blog-study/service/redis_ser"
 )
 
 type ESIDRequest struct {
@@ -18,6 +19,7 @@ func (ArticleApi) ArticleDetailView(c *gin.Context) {
 		res.FailWithCode(res.ArgumentError, c)
 		return
 	}
+	redis_ser.Look(cr.ID)
 	model, err := es_ser.CommDetail(cr.ID)
 	if err != nil {
 		res.FailWithMessage(err.Error(), c)

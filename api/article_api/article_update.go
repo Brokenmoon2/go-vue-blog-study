@@ -1,14 +1,13 @@
 package article_api
 
 import (
-	"context"
 	"github.com/fatih/structs"
 	"github.com/gin-gonic/gin"
-	"github.com/sirupsen/logrus"
 	"go-vue-blog-study/global"
 	"go-vue-blog-study/models"
 	"go-vue-blog-study/models/ctype"
 	"go-vue-blog-study/models/res"
+	"go-vue-blog-study/service/es_ser"
 	"time"
 )
 
@@ -90,17 +89,12 @@ func (ArticleApi) ArticleUpdateView(c *gin.Context) {
 		DataMap[key] = v
 	}
 
-	_, err = global.ESClient.
-		Update().
-		Index(models.ArticleModel{}.Index()).
-		Id(cr.ID).
-		Doc(DataMap).
-		Do(context.Background())
+	err = es_ser.ArticleUpdate(cr.ID, maps)
 	if err != nil {
-		logrus.Error(err.Error())
-		res.FailWithMessage("更新失败", c)
+		global.Log.Error(err)
+		res.FailWithMessage("文章更新失败", c)
 		return
 	}
+
 	res.OkWithMessage("更新成功", c)
-	logrus.Info("程序启动成功")
 }

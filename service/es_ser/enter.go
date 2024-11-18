@@ -79,6 +79,7 @@ func CommList(option Option) (list []models.ArticleModel, count int, err error) 
 	demoList := []models.ArticleModel{}
 
 	diggInfo := redis_ser.GetDiggInfo()
+	lookInfo := redis_ser.GetLookInfo()
 	for _, hit := range res.Hits.Hits {
 		var model models.ArticleModel
 		data, err := hit.Source.MarshalJSON()
@@ -98,7 +99,10 @@ func CommList(option Option) (list []models.ArticleModel, count int, err error) 
 
 		model.ID = hit.Id
 		digg := diggInfo[hit.Id]
+		look := lookInfo[hit.Id]
+
 		model.DiggCount = model.DiggCount + digg
+		model.LookCount = model.LookCount + look
 
 		demoList = append(demoList, model)
 	}
@@ -118,6 +122,7 @@ func CommDetail(id string) (model models.ArticleModel, err error) {
 		return
 	}
 	model.ID = res.Id
+	model.LookCount = model.LookCount + redis_ser.GetLook(res.Id)
 	return
 }
 
@@ -141,4 +146,14 @@ func CommDetailByKeyword(key string) (model models.ArticleModel, err error) {
 	}
 	model.ID = hit.Id
 	return
+}
+
+func ArticleUpdate(id string, data map[string]any) error {
+	_, err := global.ESClient.
+		Update().
+		Index(models.ArticleModel{}.Index()).
+		Id(id).
+		Doc(data).
+		Do(context.Background())
+	return err
 }
