@@ -8,6 +8,7 @@ import (
 	"go-vue-blog-study/global"
 	"go-vue-blog-study/models"
 	"go-vue-blog-study/models/res"
+	"go-vue-blog-study/service/es_ser"
 )
 
 type IDListRequest struct {
@@ -27,6 +28,7 @@ func (ArticleApi) ArticleRemoveView(c *gin.Context) {
 	for _, id := range cr.IDList {
 		req := elastic.NewBulkDeleteRequest().Id(id)
 		bulkService.Add(req)
+		go es_ser.DeleteFullTextByArticleID(id)
 	}
 	result, err := bulkService.Do(context.Background())
 	if err != nil {

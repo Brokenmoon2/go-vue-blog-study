@@ -8,6 +8,7 @@ import (
 	"go-vue-blog-study/global"
 	"go-vue-blog-study/models"
 	"go-vue-blog-study/models/res"
+	"go-vue-blog-study/service/es_ser"
 	"go-vue-blog-study/utils/jwts"
 	"math/rand"
 	"strings"
@@ -120,6 +121,9 @@ func (ArticleApi) ArticleCreateView(c *gin.Context) {
 		res.FailWithMessage(err.Error(), c)
 		return
 	}
+
+	go es_ser.AsyncArticleByFullText(article.ID, article.Title, article.Content)
+
 	res.OkWithMessage("文章发布成功", c)
 
 }
