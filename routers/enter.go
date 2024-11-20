@@ -27,5 +27,6 @@ func InitRoutes() *gin.Engine {
 	routerGroupApp.MessageRouter()
 	routerGroupApp.ArticleRouter()
 	routerGroupApp.DiggRouter()
+	routerGroupApp.CommentRouter()
 	return router
 }

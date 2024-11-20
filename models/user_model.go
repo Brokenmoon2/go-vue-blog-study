@@ -4,21 +4,18 @@ import (
 	"go-vue-blog-study/models/ctype"
 )
 
-// AuthModel 用户表
+// UserModel 用户表
 type UserModel struct {
-	//gorm.Model 需要逻辑删除时可用
 	MODEL
-	NickName   string           `gorm:"size:36" json:"nick_name"` //昵称
-	UserName   string           `gorm:"size:36" json:"user_name"`
-	PassWord   string           `gorm:"size:128" json:"-"`
-	Avatar     string           `gorm:"sign:256" json:"avatar_id"`
-	Email      string           `gorm:"sign:128" json:"email"`
-	Tel        string           `gorm:"size:18" json:"tel"`
-	Addr       string           `gorm:"size:64" json:"addr"`
-	Token      string           `gorm:"size:64" json:"token"`
-	IP         string           `gorm:"size:20" json:"ip"`
-	Role       ctype.Role       `gorm:"size:4;default:1" json:"role"` //角色权限
-	SignStatus ctype.SignStatus `gorm:"type=smallint(6)" json:"sign_status"`
-	//ArticleModels  []ArticleModel   `gorm:"foreignKey:UserID" json:"-"`                                                            //发布的文章
-	//CollectsModels []ArticleModel   `gorm:"many2many:user_collect_models;joinForeignKey:UserID;JoinReferences:ArticleID" json:"-"` //收藏的文章
+	NickName   string           `gorm:"size:36" json:"nick_name,select(c)"`  // 昵称
+	UserName   string           `gorm:"size:36" json:"user_name"`            // 用户名
+	PassWord   string           `gorm:"size:128" json:"-"`                   // 密码
+	Avatar     string           `gorm:"size:256" json:"avatar,select(c)"`    // 头像id
+	Email      string           `gorm:"size:128" json:"email"`               // 邮箱
+	Tel        string           `gorm:"size:18" json:"tel"`                  // 手机号
+	Addr       string           `gorm:"size:64" json:"addr,select(c)"`       // 地址
+	Token      string           `gorm:"size:64" json:"token"`                // 其他平台的唯一id
+	IP         string           `gorm:"size:20" json:"ip,select(c)"`         // ip地址
+	Role       ctype.Role       `gorm:"size:4;default:1" json:"role"`        // 权限  1 管理员  2 普通用户  3 游客
+	SignStatus ctype.SignStatus `gorm:"type=smallint(6)" json:"sign_status"` // 注册来源
 }

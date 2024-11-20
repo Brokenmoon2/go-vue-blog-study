@@ -3,6 +3,7 @@ package api
 import (
 	"go-vue-blog-study/api/advert_api"
 	"go-vue-blog-study/api/article_api"
+	"go-vue-blog-study/api/comment_api"
 	"go-vue-blog-study/api/digg_api"
 	"go-vue-blog-study/api/images_api"
 	"go-vue-blog-study/api/menu_api"
@@ -22,6 +23,7 @@ type ApiGroup struct {
 	MessageApi  message_api.MessageApi
 	ArticleApi  article_api.ArticleApi
 	DiggApi     digg_api.DiggApi
+	CommentApi  comment_api.CommentApi
 }
 
 var ApiGroupApp = new(ApiGroup)
