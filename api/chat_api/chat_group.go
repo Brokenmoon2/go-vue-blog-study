@@ -25,11 +25,13 @@ type ChatUser struct {
 var ConnGroupMap = map[string]ChatUser{}
 
 const (
-	TextMsg    ctype.MsgType = 1
-	ImageMsg   ctype.MsgType = 2
-	SystemMsg  ctype.MsgType = 3
-	InRoomMsg  ctype.MsgType = 4
-	OutRoomMsg ctype.MsgType = 5
+	InRoomMsg  ctype.MsgType = 1 // 进入聊天室
+	TextMsg    ctype.MsgType = 2 // 发文本消息
+	ImageMsg   ctype.MsgType = 3 // 图片消息
+	VoiceMsg   ctype.MsgType = 4 // 语音消息
+	VideoMsg   ctype.MsgType = 5 // 视频消息
+	SystemMsg  ctype.MsgType = 6 // 系统消息
+	OutRoomMsg ctype.MsgType = 7 // 退出聊天室
 )
 
 type GroupRequest struct {
@@ -37,11 +39,12 @@ type GroupRequest struct {
 	MsgType ctype.MsgType `json:"msg_type"` // 聊天类型
 }
 type GroupResponse struct {
-	NickName string        `json:"nick_name"` // 前端自己生成
-	Avatar   string        `json:"avatar"`    // 头像
-	MsgType  ctype.MsgType `json:"msg_type"`  // 聊天类型
-	Content  string        `json:"content"`   // 聊天的内容
-	Date     time.Time     `json:"date"`      // 消息的时间
+	NickName    string        `json:"nick_name"`    // 前端自己生成
+	Avatar      string        `json:"avatar"`       // 头像
+	MsgType     ctype.MsgType `json:"msg_type"`     // 聊天类型
+	Content     string        `json:"content"`      // 聊天的内容
+	OnlineCount int           `json:"online_count"` // 在线人数
+	Date        time.Time     `json:"date"`         // 消息的时间
 }
 
 func (ChatApi) ChatGroupView(c *gin.Context) {
@@ -77,8 +80,12 @@ func (ChatApi) ChatGroupView(c *gin.Context) {
 		if err != nil {
 			// 用户断开聊天
 			SendGroupMsg(conn, GroupResponse{
-				Content: fmt.Sprintf("%s 离开聊天室", chatUser.NickName),
-				Date:    time.Now(),
+				NickName:    chatUser.NickName,
+				Avatar:      chatUser.Avatar,
+				MsgType:     OutRoomMsg,
+				Content:     fmt.Sprintf("%s 离开聊天室", chatUser.NickName),
+				Date:        time.Now(),
+				OnlineCount: len(ConnGroupMap) - 1,
 			})
 			break
 		}
@@ -88,10 +95,11 @@ func (ChatApi) ChatGroupView(c *gin.Context) {
 		if err != nil {
 			// 参数绑定失败
 			SendMsg(addr, GroupResponse{
-				NickName: chatUser.NickName,
-				Avatar:   chatUser.Avatar,
-				MsgType:  SystemMsg,
-				Content:  "参数绑定失败",
+				NickName:    chatUser.NickName,
+				Avatar:      chatUser.Avatar,
+				MsgType:     SystemMsg,
+				Content:     "参数绑定失败",
+				OnlineCount: len(ConnGroupMap),
 			})
 			continue
 		}
@@ -100,33 +108,37 @@ func (ChatApi) ChatGroupView(c *gin.Context) {
 		case TextMsg:
 			if strings.TrimSpace(request.Content) == "" {
 				SendMsg(addr, GroupResponse{
-					NickName: chatUser.NickName,
-					Avatar:   chatUser.Avatar,
-					MsgType:  SystemMsg,
-					Content:  "消息不能为空",
+					NickName:    chatUser.NickName,
+					Avatar:      chatUser.Avatar,
+					MsgType:     SystemMsg,
+					Content:     "消息不能为空",
+					OnlineCount: len(ConnGroupMap),
 				})
 				continue
 			}
 			SendGroupMsg(conn, GroupResponse{
-				NickName: chatUser.NickName,
-				Avatar:   chatUser.Avatar,
-				Content:  request.Content,
-				MsgType:  TextMsg,
-				Date:     time.Now(),
+				NickName:    chatUser.NickName,
+				Avatar:      chatUser.Avatar,
+				Content:     request.Content,
+				MsgType:     TextMsg,
+				Date:        time.Now(),
+				OnlineCount: len(ConnGroupMap),
 			})
 		case InRoomMsg:
 			SendGroupMsg(conn, GroupResponse{
-				NickName: chatUser.NickName,
-				Avatar:   chatUser.Avatar,
-				Content:  fmt.Sprintf("%s 进入聊天室", chatUser.NickName),
-				Date:     time.Now(),
+				NickName:    chatUser.NickName,
+				Avatar:      chatUser.Avatar,
+				Content:     fmt.Sprintf("%s 进入聊天室", chatUser.NickName),
+				Date:        time.Now(),
+				OnlineCount: len(ConnGroupMap),
 			})
 		default:
 			SendMsg(addr, GroupResponse{
-				NickName: chatUser.NickName,
-				Avatar:   chatUser.Avatar,
-				MsgType:  SystemMsg,
-				Content:  "消息类型错误",
+				NickName:    chatUser.NickName,
+				Avatar:      chatUser.Avatar,
+				MsgType:     SystemMsg,
+				Content:     "消息类型错误",
+				OnlineCount: len(ConnGroupMap),
 			})
 		}
 
