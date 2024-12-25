@@ -6,6 +6,7 @@ import (
 	"go-vue-blog-study/flag"
 	"go-vue-blog-study/global"
 	"go-vue-blog-study/routers"
+	"go-vue-blog-study/utils"
 )
 
 // @title go-vue-blog-study API文档
@@ -36,7 +37,9 @@ func main() {
 	// 注册自定义校验器
 
 	addr := global.Config.System.Addr()
-	global.Log.Infof("go-vue-blog-study运行在：%s", addr)
+
+	utils.PrintSystem()
+
 	err := router.Run(addr)
 	if err != nil {
 		global.Log.Fatal(err.Error())
