@@ -12,7 +12,7 @@ func GenToken(user JwtPayLoad) (string, error) {
 	claim := CustomClaims{
 		user,
 		jwt.RegisteredClaims{
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * time.Duration(global.Config.Jwy.Expires))),
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 24 * time.Duration(global.Config.Jwy.Expires))),
 			// 默认2小时过期
 			Issuer: global.Config.Jwy.Issuer, // 签发人
 		},

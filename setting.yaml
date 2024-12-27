@@ -34,7 +34,7 @@ site_info:
   slogan_en: Life is like a journey, I am also a walker
 jwy:
   secret: xxxx
-  expires: 2
+  expires: 30
   issuer: "1234"
 redis:
   ip: 127.0.0.1
