@@ -22,6 +22,16 @@ type ImageResponse struct {
 // @Success 200 {object} res.Response{data=[]ImageResponse}
 func (ImagesApi) ImageNameListView(c *gin.Context) {
 	var imageList []ImageResponse
+	// 查询图片信息
 	global.DB.Model(models.BannerModel{}).Select("id", "path", "name").Scan(&imageList)
+
+	// 遍历图片列表，给每个 Path 字段前面加上 "/"
+	for i := range imageList {
+		if imageList[i].Path != "" {
+			imageList[i].Path = "/" + imageList[i].Path
+		}
+	}
+
+	// 返回修改后的数据
 	res.OkWithData(imageList, c)
 }

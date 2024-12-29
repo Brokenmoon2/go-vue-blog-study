@@ -29,5 +29,4 @@ func (ImagesApi) ImageListView(c *gin.Context) {
 	})
 
 	res.OkWithList(list, count, c)
-
 }

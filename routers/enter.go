@@ -5,6 +5,8 @@ import (
 	swaggerFiles "github.com/swaggo/files"
 	gs "github.com/swaggo/gin-swagger"
 	"go-vue-blog-study/global"
+	"go-vue-blog-study/middleware"
+	"net/http"
 )
 
 type RouterGroup struct {
@@ -14,6 +16,9 @@ type RouterGroup struct {
 func InitRoutes() *gin.Engine {
 	gin.SetMode(global.Config.System.Env)
 	router := gin.Default()
+
+	router.Use(middleware.LogMiddleWare())
+	router.StaticFS("uploads", http.Dir("uploads"))
 	router.GET("/swagger/*any", gs.WrapHandler(swaggerFiles.Handler))
 	apiRouterGroup := router.Group("api")
 	// 系统配置api

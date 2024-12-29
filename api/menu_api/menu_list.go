@@ -17,6 +17,13 @@ type MenuResponse struct {
 	Banners []Banner `json:"banners"`
 }
 
+// MenuListView 菜单列表
+// @Tags 菜单管理
+// @Summary 菜单列表
+// @Description 菜单列表
+// @Router /api/menus [get]
+// @Produce json
+// @Success 200 {object} res.Response{data=res.ListResponse[MenuResponse]}
 func (MenuApi) MenuListView(c *gin.Context) {
 	// 先查菜单
 	var menuList []models.MenuModel
@@ -25,18 +32,19 @@ func (MenuApi) MenuListView(c *gin.Context) {
 	// 查连接表
 	var menuBanners []models.MenuBannerModel
 	global.DB.Preload("BannerModel").Order("sort desc").Find(&menuBanners, "menu_id in ?", menuIDList)
-	var menus []MenuResponse
+	var menus = make([]MenuResponse, 0)
 	for _, model := range menuList {
 		// model就是一个菜单
 		// 解决null值问题
 		var banners = make([]Banner, 0)
+		//banners := []Banner{}
 		for _, banner := range menuBanners {
 			if model.ID != banner.MenuID {
 				continue
 			}
 			banners = append(banners, Banner{
 				ID:   banner.BannerID,
-				Path: banner.BannerModel.Path,
+				Path: "/" + banner.BannerModel.Path,
 			})
 		}
 		menus = append(menus, MenuResponse{
@@ -44,6 +52,7 @@ func (MenuApi) MenuListView(c *gin.Context) {
 			Banners:   banners,
 		})
 	}
-	res.OkWithData(menus, c)
+
+	res.OkWithList(menus, int64(len(menus)), c)
 	return
 }
