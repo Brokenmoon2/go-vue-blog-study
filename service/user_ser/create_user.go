@@ -5,6 +5,7 @@ import (
 	"go-vue-blog-study/global"
 	"go-vue-blog-study/models"
 	"go-vue-blog-study/models/ctype"
+	"go-vue-blog-study/utils"
 	"go-vue-blog-study/utils/pwd"
 )
 
@@ -23,7 +24,7 @@ func (UserService) CreateUser(userName, nickName, password string, role ctype.Ro
 	// 头像问题
 	// 1. 默认头像
 	// 2. 随机选择头像
-
+	addr := utils.GetAddr(ip)
 	// 入库
 	err = global.DB.Create(&models.UserModel{
 		NickName:   nickName,
@@ -33,7 +34,7 @@ func (UserService) CreateUser(userName, nickName, password string, role ctype.Ro
 		Role:       role,
 		Avatar:     Avatar,
 		IP:         ip,
-		Addr:       "内网地址",
+		Addr:       addr,
 		SignStatus: ctype.SignEmail,
 	}).Error
 	if err != nil {

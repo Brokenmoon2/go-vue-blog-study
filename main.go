@@ -22,6 +22,9 @@ func main() {
 	// 初始化数据库
 	global.DB = core.InitGorm()
 
+	core.InitAddrDB()
+	defer global.AddrDB.Close()
+
 	//命令行参数绑定
 	option := flag.Parse()
 	if flag.IsWebStop(option) {
