@@ -3,6 +3,7 @@ package flag
 import (
 	"go-vue-blog-study/global"
 	"go-vue-blog-study/models"
+	"go-vue-blog-study/plugins/log_stash"
 )
 
 func Makemigrations() {
@@ -25,6 +26,7 @@ func Makemigrations() {
 			&models.FadeBackModel{},
 			&models.LoginDataModel{},
 			&models.ChatModel{},
+			&log_stash.LogStashModel{},
 		)
 	if err != nil {
 		global.Log.Error("[ error ] 生成数据库表结构失败")
