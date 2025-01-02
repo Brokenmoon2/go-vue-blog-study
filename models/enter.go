@@ -19,6 +19,10 @@ type ESIDListRequest struct {
 	IDList []string `json:"id_list" binding:"required"`
 }
 
+type IDRequest struct {
+	ID uint `json:"id" form:"id" uri:"id"`
+}
+
 type PageInfo struct {
 	Page  int    `form:"page"`
 	Key   string `form:"key"`
