@@ -7,6 +7,7 @@ import (
 	"go-vue-blog-study/api/comment_api"
 	"go-vue-blog-study/api/digg_api"
 	"go-vue-blog-study/api/images_api"
+	"go-vue-blog-study/api/log_api"
 	"go-vue-blog-study/api/menu_api"
 	"go-vue-blog-study/api/message_api"
 	"go-vue-blog-study/api/role_api"
@@ -28,6 +29,7 @@ type ApiGroup struct {
 	CommentApi  comment_api.CommentApi
 	ChatApi     chat_api.ChatApi
 	RoleApi     role_api.RoleApi
+	LogApi      log_api.LogApi
 }
 
 var ApiGroupApp = new(ApiGroup)
