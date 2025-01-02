@@ -1,12 +1,13 @@
 package user_api
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"go-vue-blog-study/global"
 	"go-vue-blog-study/models"
+	"go-vue-blog-study/models/ctype"
 	"go-vue-blog-study/models/res"
-	"go-vue-blog-study/plugins/log_stash"
+	"go-vue-blog-study/plugins/log_stash_v2"
+	"go-vue-blog-study/utils"
 	"go-vue-blog-study/utils/jwts"
 	"go-vue-blog-study/utils/pwd"
 )
@@ -16,6 +17,14 @@ type EmailLoginRequest struct {
 	Password string `json:"password" binding:"required" msg:"请输入密码"`
 }
 
+// EmailLoginView 邮箱登录，返回token，用户信息需要从token中解码
+// @Tags 用户管理
+// @Summary 邮箱登录
+// @Description 邮箱登录，返回token，用户信息需要从token中解码
+// @Param data body EmailLoginRequest  true  "查询参数"
+// @Router /api/email_login [post]
+// @Produce json
+// @Success 200 {object} res.Response{}
 func (UserApi) EmailLoginView(c *gin.Context) {
 	var cr EmailLoginRequest
 	err := c.ShouldBindJSON(&cr)
@@ -24,14 +33,12 @@ func (UserApi) EmailLoginView(c *gin.Context) {
 		return
 	}
 
-	log := log_stash.NewLogByGin(c)
-
 	var userModel models.UserModel
 	err = global.DB.Take(&userModel, "user_name = ? or email = ?", cr.UserName, cr.UserName).Error
 	if err != nil {
 		// 没找到
 		global.Log.Warn("用户名不存在")
-		log.Warn(fmt.Sprintf("%s 用户名不存在", cr.UserName))
+		log_stash.NewFailLogin("用户名不存在", cr.UserName, cr.Password, c)
 		res.FailWithMessage("用户名或密码错误", c)
 		return
 	}
@@ -39,7 +46,7 @@ func (UserApi) EmailLoginView(c *gin.Context) {
 	isCheck := pwd.CheckPwd(userModel.PassWord, cr.Password)
 	if !isCheck {
 		global.Log.Warn("用户名密码错误")
-		log.Warn(fmt.Sprintf("用户名密码错误 %s %s", cr.UserName, cr.Password))
+		log_stash.NewFailLogin("用户名密码错误", cr.UserName, cr.Password, c)
 		res.FailWithMessage("用户名或密码错误", c)
 		return
 	}
@@ -48,15 +55,27 @@ func (UserApi) EmailLoginView(c *gin.Context) {
 		NickName: userModel.NickName,
 		Role:     int(userModel.Role),
 		UserID:   userModel.ID,
+		Username: userModel.UserName,
 	})
 	if err != nil {
 		global.Log.Error(err)
-		log.Error(fmt.Sprintf("token生成失败 %s", err.Error()))
 		res.FailWithMessage("token生成失败", c)
 		return
 	}
-	log = log_stash.New(c.ClientIP(), token)
-	log.Info("登录成功")
+	ip, addr := utils.GetAddrByGin(c)
+	c.Request.Header.Set("token", token)
+	log_stash.NewSuccessLogin(c)
+
+	global.DB.Create(&models.LoginDataModel{
+		UserID:    userModel.ID,
+		IP:        ip,
+		NickName:  userModel.NickName,
+		Token:     token,
+		Device:    "",
+		Addr:      addr,
+		LoginType: ctype.SignEmail,
+	})
+
 	res.OkWithData(token, c)
 
 }

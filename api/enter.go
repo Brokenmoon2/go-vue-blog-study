@@ -5,9 +5,11 @@ import (
 	"go-vue-blog-study/api/article_api"
 	"go-vue-blog-study/api/chat_api"
 	"go-vue-blog-study/api/comment_api"
+	"go-vue-blog-study/api/data_api"
 	"go-vue-blog-study/api/digg_api"
 	"go-vue-blog-study/api/images_api"
 	"go-vue-blog-study/api/log_api"
+	"go-vue-blog-study/api/log_v2_api"
 	"go-vue-blog-study/api/menu_api"
 	"go-vue-blog-study/api/message_api"
 	"go-vue-blog-study/api/role_api"
@@ -30,6 +32,8 @@ type ApiGroup struct {
 	ChatApi     chat_api.ChatApi
 	RoleApi     role_api.RoleApi
 	LogApi      log_api.LogApi
+	LogV2Api    log_v2_api.LogApi
+	DataApi     data_api.DataApi
 }
 
 var ApiGroupApp = new(ApiGroup)

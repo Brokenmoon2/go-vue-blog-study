@@ -4,6 +4,7 @@ import (
 	"go-vue-blog-study/global"
 	"go-vue-blog-study/models"
 	"go-vue-blog-study/plugins/log_stash"
+	log_stash_v2 "go-vue-blog-study/plugins/log_stash_v2"
 )
 
 func Makemigrations() {
@@ -27,6 +28,7 @@ func Makemigrations() {
 			&models.LoginDataModel{},
 			&models.ChatModel{},
 			&log_stash.LogStashModel{},
+			&log_stash_v2.LogModel{},
 		)
 	if err != nil {
 		global.Log.Error("[ error ] 生成数据库表结构失败")
