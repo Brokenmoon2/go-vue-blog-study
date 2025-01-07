@@ -5,6 +5,7 @@ import (
 	"go-vue-blog-study/models"
 	"go-vue-blog-study/models/res"
 	"go-vue-blog-study/service/common"
+	"strings"
 )
 
 // ImageListView 图片列表
@@ -28,5 +29,15 @@ func (ImagesApi) ImageListView(c *gin.Context) {
 		Debug:    true,
 	})
 
+	// 遍历 list 并给图片路径加上前缀 /
+	for i := range list {
+		// 假设 BannerModel 中有一个字段 ImagePath
+		// 如果路径本身没有 /，则加上 /
+		if list[i].Path != "" && !strings.HasPrefix(list[i].Path, "/") {
+			list[i].Path = "/" + list[i].Path
+		}
+	}
+
+	// 返回修改后的 list
 	res.OkWithList(list, count, c)
 }
