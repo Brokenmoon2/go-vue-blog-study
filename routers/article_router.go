@@ -20,4 +20,5 @@ func (router RouterGroup) ArticleRouter() {
 	router.GET("articles/collects", middleware.JwtAuth(), app.ArticleCollListView)
 	router.GET("articles/text", app.FullTextSearchView) // 全文搜索
 	router.DELETE("articles/collects", middleware.JwtAuth(), app.ArticleCollBatchRemoveView)
+	router.GET("articles/content/:id", app.ArticleContentByIDView) // 文章内容
 }
