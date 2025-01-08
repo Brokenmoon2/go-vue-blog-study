@@ -1,13 +1,16 @@
 package es_ser
 
 import (
+	"github.com/olivere/elastic/v7"
 	"go-vue-blog-study/models"
 )
 
 type Option struct {
 	models.PageInfo
-	Fields []string
-	Tag    string
+	Fields   []string
+	Tag      string
+	Category string
+	Query    *elastic.BoolQuery
 }
 
 func (o *Option) GetForm() int {
