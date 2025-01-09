@@ -14,5 +14,6 @@ func (router RouterGroup) MessageRouter() {
 	router.GET("message_users/record", middleware.JwtAdmin(), app.MessageUserRecordView)
 	router.GET("message_users", middleware.JwtAdmin(), app.MessageUserListView)
 	router.GET("message_users/user", middleware.JwtAdmin(), app.MessageUserListByUserView)
-
+	router.GET("message_users/me", middleware.JwtAuth(), app.MessageUserListByMeView)
+	router.GET("message_users/record/me", middleware.JwtAuth(), app.MessageUserRecordByMeView)
 }
