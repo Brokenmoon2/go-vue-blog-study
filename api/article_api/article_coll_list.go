@@ -62,6 +62,12 @@ func (ArticleApi) ArticleCollListView(c *gin.Context) {
 			continue
 		}
 		article.ID = hit.Id
+
+		// 修改 BannerUrl，确保它以 / 开头
+		if article.BannerUrl != "" && article.BannerUrl[0] != '/' {
+			article.BannerUrl = "/" + article.BannerUrl
+		}
+
 		collList = append(collList, CollResponse{
 			ArticleModel: article,
 			CreatedAt:    collMap[hit.Id],
