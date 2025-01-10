@@ -46,13 +46,13 @@ qi_niu:
   zone: ""
   size: 0
 email:
-  host: 1941658307@qq.com
+  host: smtp.qq.com
   port: 465
   user: 1941658307@qq.com
-  password: "1234"
+  password: eqsbkbttjzbreaae
   default_from_email: 空无
-  use_ssl: false
-  user_tls: true
+  use_ssl: true
+  user_tls: false
 jwy:
   secret: xxxx
   expires: 30
