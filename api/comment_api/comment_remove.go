@@ -8,9 +8,19 @@ import (
 	"go-vue-blog-study/models/res"
 	"go-vue-blog-study/service/redis_ser"
 	"go-vue-blog-study/utils"
+	"go-vue-blog-study/utils/jwts"
 	"gorm.io/gorm"
 )
 
+// CommentRemoveView 删除评论
+// @Tags 评论管理
+// @Summary 删除评论
+// @Description 删除评论
+// @Param token header string  true  "token"
+// @Param id path int  true  "id"
+// @Router /api/comments/{id} [delete]
+// @Produce json
+// @Success 200 {object} res.Response{}
 func (CommentApi) CommentRemoveView(c *gin.Context) {
 	var cr CommentIDRequest
 	err := c.ShouldBindUri(&cr)
@@ -18,14 +28,22 @@ func (CommentApi) CommentRemoveView(c *gin.Context) {
 		res.FailWithCode(res.ArgumentError, c)
 		return
 	}
+	_claims, _ := c.Get("claims")
+	claims := _claims.(*jwts.CustomClaims)
 	var commentModel models.CommentModel
 	err = global.DB.Take(&commentModel, cr.ID).Error
 	if err != nil {
 		res.FailWithMessage("评论不存在", c)
 		return
 	}
+	// 这条评论只能由当前登录人删除，或者管理员
+	if !(commentModel.UserID == claims.UserID || claims.Role == 1) {
+		res.FailWithMessage("权限错误，不可删除", c)
+		return
+	}
+
 	// 统计评论下的子评论数 再把自己算上去
-	subCommentList := FindSubCommentCount(commentModel)
+	subCommentList := models.FindAllSubCommentList(commentModel)
 	count := len(subCommentList) + 1
 	redis_ser.NewCommentCount().SetCount(commentModel.ArticleID, -count)
 
