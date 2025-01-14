@@ -16,8 +16,16 @@ type DataSumResponse struct {
 	ChatGroupCount int `json:"chat_group_count"`
 	NowLoginCount  int `json:"now_login_count"`
 	NowSignCount   int `json:"now_sign_count"`
+	FlowCount      int `json:"flow_count"`
 }
 
+// DataSumView 求和数据
+// @Tags 数据管理
+// @Summary 求和数据
+// @Description 求和数据
+// @Router /api/data_sum [get]
+// @Produce json
+// @Success 200 {object} res.Response{data=[]DataSumResponse}
 func (DataApi) DataSumView(c *gin.Context) {
 
 	var userCount, articleCount, messageCount, ChatGroupCount int
@@ -43,5 +51,6 @@ func (DataApi) DataSumView(c *gin.Context) {
 		ChatGroupCount: ChatGroupCount,
 		NowLoginCount:  nowLoginCount,
 		NowSignCount:   nowSignCount,
+		FlowCount:      114514,
 	}, c)
 }
