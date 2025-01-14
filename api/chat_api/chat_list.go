@@ -8,6 +8,14 @@ import (
 	"go-vue-blog-study/service/common"
 )
 
+// ChatListView 群聊聊天记录
+// @Tags 聊天管理
+// @Summary 群聊聊天记录
+// @Description 群聊聊天记录
+// @Param data query models.PageInfo   false  "表示多个参数"
+// @Router /api/chat_groups_records [get]
+// @Produce json
+// @Success 200 {object} res.Response{data=res.ListResponse[models.ChatModel]}
 func (ChatApi) ChatListView(c *gin.Context) {
 	var cr models.PageInfo
 	err := c.ShouldBindQuery(&cr)

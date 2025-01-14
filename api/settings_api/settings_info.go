@@ -41,6 +41,16 @@ func (SettingsApi) SettingsInfoView(c *gin.Context) {
 		info := global.Config.QiNiu
 		info.SecretKey = "******"
 		res.OkWithData(info, c)
+	case "jwt":
+		info := global.Config.Jwy
+		info.Secret = "******"
+		res.OkWithData(info, c)
+	case "chat_group":
+		res.OkWithData(global.Config.ChatGroup, c)
+	case "gaode":
+		info := global.Config.Gaode
+		info.Key = "******"
+		res.OkWithData(info, c)
 	default:
 		res.FailWithMessage("没有对应的配置信息", c)
 	}

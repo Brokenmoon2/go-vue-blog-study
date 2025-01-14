@@ -38,7 +38,7 @@ func (CommentApi) CommentListAllView(c *gin.Context) {
 	c.ShouldBindQuery(&cr)
 
 	if cr.Limit == 0 {
-		cr.Limit = 10 // 默认 10 条记录
+		cr.Limit = 10000 // 默认 10000 条记录
 	}
 
 	list, count, _ := common.ComList(models.CommentModel{}, common.Option{

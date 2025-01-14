@@ -33,6 +33,9 @@ site_info:
   bilibili_url: ""
   gitee_url: ""
   github_url: ""
+upload:
+  size: 50
+  path: uploads/file
 qq:
   app_id: ""
   key: ""
@@ -57,9 +60,6 @@ jwy:
   secret: xxxx
   expires: 30
   issuer: "1234"
-upload:
-  size: 50
-  path: uploads/file
 redis:
   ip: 127.0.0.1
   port: 6379
@@ -70,4 +70,16 @@ es:
   port: 9200
   user: ""
   password: ""
-jwt: null
+chat_group:
+  isAnonymous: true
+  isShowTime: true
+  defaultLimit: 0
+  contentLength: 0
+  welcomeTitle: ""
+  isOnlinePeople: true
+  isSendImage: false
+  isSendFile: false
+  isMd: false
+gaode:
+  enable: false
+  key: ""

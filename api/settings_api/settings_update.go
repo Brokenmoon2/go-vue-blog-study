@@ -59,39 +59,39 @@ func (SettingsApi) SettingsInfoUpdateView(c *gin.Context) {
 			info.SecretKey = global.Config.QiNiu.SecretKey
 		}
 		global.Config.QiNiu = info
-		//case "jwt":
-		//	var info config.Jwt
-		//	err = c.ShouldBindJSON(&info)
-		//	if err != nil {
-		//		res.FailWithCode(res.ArgumentError, c)
-		//		return
-		//	}
-		//	if info.Secret == "******" {
-		//		info.Secret = global.Config.Jwt.Secret
-		//	}
-		//	global.Config.Jwt = info
-		//case "chat_group":
-		//	var info config.ChatGroup
-		//	err = c.ShouldBindJSON(&info)
-		//	if err != nil {
-		//		res.FailWithCode(res.ArgumentError, c)
-		//		return
-		//	}
-		//	global.Config.ChatGroup = info
-		//case "gaode":
-		//	var info config.Gaode
-		//	err = c.ShouldBindJSON(&info)
-		//	if err != nil {
-		//		res.FailWithCode(res.ArgumentError, c)
-		//		return
-		//	}
-		//	if info.Key == "******" {
-		//		info.Key = global.Config.Gaode.Key
-		//	}
-		//	global.Config.Gaode = info
-		//default:
-		//	res.FailWithMessage("没有对应的配置信息", c)
-		//	return
+	case "jwt":
+		var info config.Jwy
+		err = c.ShouldBindJSON(&info)
+		if err != nil {
+			res.FailWithCode(res.ArgumentError, c)
+			return
+		}
+		if info.Secret == "******" {
+			info.Secret = global.Config.Jwy.Secret
+		}
+		global.Config.Jwy = info
+	case "chat_group":
+		var info config.ChatGroup
+		err = c.ShouldBindJSON(&info)
+		if err != nil {
+			res.FailWithCode(res.ArgumentError, c)
+			return
+		}
+		global.Config.ChatGroup = info
+	case "gaode":
+		var info config.Gaode
+		err = c.ShouldBindJSON(&info)
+		if err != nil {
+			res.FailWithCode(res.ArgumentError, c)
+			return
+		}
+		if info.Key == "******" {
+			info.Key = global.Config.Gaode.Key
+		}
+		global.Config.Gaode = info
+	default:
+		res.FailWithMessage("没有对应的配置信息", c)
+		return
 	}
 
 	core.SetYaml()
