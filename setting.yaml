@@ -76,7 +76,7 @@ chat_group:
   defaultLimit: 0
   contentLength: 0
   welcomeTitle: ""
-  isOnlinePeople: true
+  isOnlinePeople: false
   isSendImage: false
   isSendFile: false
   isMd: false
