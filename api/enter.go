@@ -14,6 +14,7 @@ import (
 	"go-vue-blog-study/api/log_v2_api"
 	"go-vue-blog-study/api/menu_api"
 	"go-vue-blog-study/api/message_api"
+	"go-vue-blog-study/api/new_api"
 	"go-vue-blog-study/api/role_api"
 	"go-vue-blog-study/api/settings_api"
 	"go-vue-blog-study/api/tag_api"
@@ -38,6 +39,7 @@ type ApiGroup struct {
 	DataApi     data_api.DataApi
 	GaodeApi    gaode_api.GaodeApi
 	FeedbackApi feedback_api.FeedbackApi
+	NewsApi     new_api.NewApi
 }
 
 var ApiGroupApp = new(ApiGroup)
