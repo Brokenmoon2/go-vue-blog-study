@@ -3,41 +3,44 @@ package main
 import (
 	"go-vue-blog-study/core"
 	_ "go-vue-blog-study/docs"
-	"go-vue-blog-study/flag"
+	"go-vue-blog-study/flags"
 	"go-vue-blog-study/global"
 	"go-vue-blog-study/routers"
+	"go-vue-blog-study/service/cron_ser"
 	"go-vue-blog-study/utils"
 )
 
-// @title go-vue-blog-study API文档
+// @title gvb_server API文档
 // @version 1.0
-// @description go-vue-blog-study API文档
-// @host 127.0.0.01:8080
+// @description gvb_server API文档
+// @host 127.0.0.1:8080
 // @BasePath /
 func main() {
-	// 初始化配置文件（读取配置文件）
+	// 读取配置文件
 	core.InitConf()
-	// 初始化啊日志
+	// 初始化日志
 	global.Log = core.InitLogger()
-	// 初始化数据库
+	// 连接数据库
 	global.DB = core.InitGorm()
 
 	core.InitAddrDB()
-	defer global.AddrDB.Close()
 
-	//命令行参数绑定
-	option := flag.Parse()
-	if flag.IsWebStop(option) {
-		flag.SwitchOption(option)
-		return
-	}
-	// 初始化redis
+	// 连接redis
 	global.Redis = core.ConnectRedis()
 	// 连接es
 	global.ESClient = core.EsConnect()
 
-	router := routers.InitRoutes()
-	// 注册自定义校验器
+	defer global.AddrDB.Close()
+
+	// 命令行参数绑定
+	option := flags.Parse()
+	if option.Run() {
+		return
+	}
+
+	cron_ser.CronInit()
+
+	router := routers.InitRouter()
 
 	addr := global.Config.System.Addr()
 
@@ -45,6 +48,6 @@ func main() {
 
 	err := router.Run(addr)
 	if err != nil {
-		global.Log.Fatal(err.Error())
+		global.Log.Fatalf(err.Error())
 	}
 }

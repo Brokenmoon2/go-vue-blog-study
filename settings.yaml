@@ -1,0 +1,85 @@
+mysql:
+  host: 127.0.0.1
+  port: 3306
+  config: charset=utf8mb4&parseTime=True&loc=Local
+  db: blog-study
+  user: root
+  password: wg247810
+  log_level: ""
+logger:
+  level: info
+  prefix: '[blog]'
+  director: ""
+  show_line: false
+  log_in_console: false
+system:
+  host: 0.0.0.0
+  port: 8080
+  env: debug
+site_info:
+  created_at: "2025-01-01"
+  bei_an: 暂无
+  title: 博客
+  qq_image: "uploads/file/icon/qq.png"
+  version: 1.0.1
+  email: 123456@qq.com
+  wechat_image: "uploads/file/icon/weixin.png"
+  name: 放空
+  job: 学生
+  addr: "中国"
+  slogan: 深林人不知，明月来相照
+  slogan_en: Yet the bright moon arrives, its light to share
+  web: ""
+  bilibili_url: "https://www.bilibili.com/"
+  gitee_url: "https://gitee.com/"
+  github_url: "https://github.com/"
+upload:
+  size: 50
+  path: uploads/file
+qq:
+  app_id: ""
+  key: ""
+  redirect: ""
+qi_niu:
+  enable: false
+  access_key: ""
+  secret_key: ""
+  bucket: ""
+  cdn: ""
+  zone: ""
+  size: 0
+email:
+  host: smtp.qq.com
+  port: 465
+  user: 1941658307@qq.com
+  password: eqsbkbttjzbreaae
+  default_from_email: 空无
+  use_ssl: true
+  user_tls: false
+jwy:
+  secret: xxxx
+  expires: 30
+  issuer: "1234"
+redis:
+  ip: 127.0.0.1
+  port: 6379
+  password: ""
+  pool_size: 100
+es:
+  host: http://127.0.0.1
+  port: 9200
+  user: ""
+  password: ""
+chat_group:
+  isAnonymous: true
+  isShowTime: true
+  defaultLimit: 0
+  contentLength: 0
+  welcomeTitle: ""
+  isOnlinePeople: false
+  isSendImage: false
+  isSendFile: false
+  isMd: false
+gaode:
+  enable: false
+  key: ""

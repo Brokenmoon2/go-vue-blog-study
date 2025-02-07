@@ -1,0 +1,1 @@
+import{N as t}from"./index-C_OMfqPK.js";function r(){return t.get("/api/image_names")}function s(a){return t.get("/api/images",{params:a})}function p(a){return new Promise((n,m)=>{const i=new FormData;i.set("image",a),t.post("/api/image",i,{headers:{"Content-Type":"multipart/form-data"}}).then(e=>n(e)).catch(e=>m(e))})}export{s as a,r as i,p as u};

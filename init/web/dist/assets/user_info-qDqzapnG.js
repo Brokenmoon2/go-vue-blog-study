@@ -1,0 +1,1 @@
+import{_ as e}from"./_plugin-vue_export-helper-DlAUqK2U.js";import{b as o,o as r}from"./index-C_OMfqPK.js";const c={};function n(t,s){return r(),o("div",null,"我的信息")}const f=e(c,[["render",n]]);export{f as default};

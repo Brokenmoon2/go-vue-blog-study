@@ -8,6 +8,7 @@ import (
 	"go-vue-blog-study/models"
 	"go-vue-blog-study/models/res"
 	"go-vue-blog-study/service/redis_ser"
+	"strings"
 )
 
 // ArticleContentByIDView 获取文章正文
@@ -40,5 +41,11 @@ func (ArticleApi) ArticleContentByIDView(c *gin.Context) {
 	if err != nil {
 		return
 	}
-	res.OkWithData(model.Content, c)
+
+	// 在 BannerUrl 前面加上 /，避免重复添加
+	if model.BannerUrl != "" && !strings.HasPrefix(model.BannerUrl, "/") {
+		model.BannerUrl = "/" + model.BannerUrl
+	}
+
+	res.OkWithData(model, c)
 }

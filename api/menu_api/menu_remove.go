@@ -18,7 +18,8 @@ func (MenuApi) MenuRemoveView(c *gin.Context) {
 	}
 
 	var menuList []models.MenuModel
-	count := global.DB.Find(&menuList, cr.IDList).RowsAffected
+	fmt.Println("IDList:", cr.IDList) // 在查询前打印 IDList
+	count := global.DB.Where("id IN ?", cr.IDList).Find(&menuList).RowsAffected
 	if count == 0 {
 		res.FailWithMessage("菜单不存在", c)
 		return
@@ -44,5 +45,4 @@ func (MenuApi) MenuRemoveView(c *gin.Context) {
 		return
 	}
 	res.OkWithMessage(fmt.Sprintf("共删除 %d 个菜单", count), c)
-
 }

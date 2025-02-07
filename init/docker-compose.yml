@@ -1,0 +1,70 @@
+version: '3'
+services:
+  es:
+    image: "elasticsearch:7.12.0"
+    restart: always
+    privileged: true
+    environment:
+      discovery.type: single-node
+      ES_JAVA_OPTS: "-Xms512m -Xmx512m"
+    volumes:
+      - ./es/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - ./es/data:/usr/share/elasticsearch/data
+    networks:
+      blog_network:
+        ipv4_address: 10.2.0.2
+  redis:
+    restart: always
+    image: "redis:latest"
+    networks:
+      blog_network:
+        ipv4_address: 10.2.0.3
+  mysql:
+    image: mysql:5.7
+    restart: always
+    volumes:
+      - ./mysql/conf:/etc/mysql/conf.d
+      - ./mysql/datadir:/var/lib/mysql
+      - ./mysql/blog-study_20250202.sql:/docker-entrypoint-initdb.d/blog-study_20250202.sql
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: nine_db
+    networks:
+      blog_network:
+        ipv4_address: 10.2.0.4
+  go-vue-blog:
+    restart: "always"
+    image: kongwu684/go-vue-blog:v1.0.2
+    networks:
+      blog_network:
+        ipv4_address: 10.2.0.5
+    depends_on:
+      - mysql
+      - redis
+      - es
+    volumes:
+      - /go-vue/server/settings.yaml:/app/settings.yaml  # 使用绝对路径挂载
+      - ./server/uploads:/app/uploads
+      - ./server/logs:/app/logs
+    command: "/app/main"
+  web:
+      image: nginx:latest
+      restart: always
+      volumes:
+        - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+        - ./nginx/logs:/var/log/nginx/
+        - ./server/uploads:/usr/share/nginx/server/uploads
+        - ./web/dist:/usr/share/nginx/web
+      networks:
+        blog_network:
+          ipv4_address: 10.2.0.6
+      ports:
+        - "80:80"
+networks:
+  blog_network:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.2.0.0/24

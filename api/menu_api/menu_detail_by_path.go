@@ -34,6 +34,7 @@ func (MenuApi) MenuDetailByPathView(c *gin.Context) {
 		return
 	}
 	// 查连接表
+	// 查连接表
 	var menuBanners []models.MenuBannerModel
 	global.DB.Preload("BannerModel").Order("sort desc").Find(&menuBanners, "menu_id = ?", menuModel.ID)
 	var banners = make([]Banner, 0)
@@ -41,9 +42,11 @@ func (MenuApi) MenuDetailByPathView(c *gin.Context) {
 		if menuModel.ID != banner.MenuID {
 			continue
 		}
+		// 修改 banner.Path，确保它以 "/" 开头
+		bannerPath := "/" + banner.BannerModel.Path
 		banners = append(banners, Banner{
 			ID:   banner.BannerID,
-			Path: banner.BannerModel.Path,
+			Path: bannerPath, // 添加 "/" 前缀
 		})
 	}
 	menuResponse := MenuResponse{

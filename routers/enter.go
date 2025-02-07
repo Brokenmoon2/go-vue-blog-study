@@ -13,7 +13,7 @@ type RouterGroup struct {
 	*gin.RouterGroup
 }
 
-func InitRoutes() *gin.Engine {
+func InitRouter() *gin.Engine {
 	gin.SetMode(global.Config.System.Env)
 	router := gin.Default()
 
@@ -38,5 +38,7 @@ func InitRoutes() *gin.Engine {
 	routerGroupApp.LogRouter()
 	routerGroupApp.LogV2Router()
 	routerGroupApp.DataRouter()
+	routerGroupApp.NewsRouter()
+	routerGroupApp.FeedbackRouter()
 	return router
 }

@@ -1,0 +1,1 @@
+import{_ as e}from"./_plugin-vue_export-helper-DlAUqK2U.js";import{b as t,o as c}from"./index-C_OMfqPK.js";const o={};function r(n,s){return c(),t("div",null,"聊天记录")}const f=e(o,[["render",r]]);export{f as default};

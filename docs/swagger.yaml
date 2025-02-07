@@ -69,8 +69,8 @@ definitions:
 host: 127.0.0.01:8080
 info:
   contact: {}
-  description: go-vue-blog-study API文档
-  title: go-vue-blog-study API文档
+  description: server-study API文档
+  title: server-study API文档
   version: "1.0"
 paths:
   /api/adverts:

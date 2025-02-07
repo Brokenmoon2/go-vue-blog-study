@@ -292,8 +292,8 @@ var SwaggerInfo = &swag.Spec{
 	Host:             "127.0.0.01:8080",
 	BasePath:         "/",
 	Schemes:          []string{},
-	Title:            "go-vue-blog-study API文档",
-	Description:      "go-vue-blog-study API文档",
+	Title:            "server-study API文档",
+	Description:      "server-study API文档",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 }

@@ -6,6 +6,7 @@ import (
 	"go-vue-blog-study/models/res"
 	"go-vue-blog-study/service/es_ser"
 	"go-vue-blog-study/service/redis_ser"
+	"strings"
 )
 
 type ESIDRequest struct {
@@ -25,6 +26,12 @@ func (ArticleApi) ArticleDetailView(c *gin.Context) {
 		res.FailWithMessage(err.Error(), c)
 		return
 	}
+
+	// 在 BannerUrl 前面加上 /，避免重复添加
+	if model.BannerUrl != "" && !strings.HasPrefix(model.BannerUrl, "/") {
+		model.BannerUrl = "/" + model.BannerUrl
+	}
+
 	res.OkWithData(model, c)
 }
 
@@ -44,5 +51,11 @@ func (ArticleApi) ArticleDetailByTitleView(c *gin.Context) {
 		res.FailWithMessage(err.Error(), c)
 		return
 	}
+
+	// 在 BannerUrl 前面加上 /，避免重复添加
+	if model.BannerUrl != "" && !strings.HasPrefix(model.BannerUrl, "/") {
+		model.BannerUrl = "/" + model.BannerUrl
+	}
+
 	res.OkWithData(model, c)
 }

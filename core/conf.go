@@ -10,7 +10,7 @@ import (
 	"log"
 )
 
-const ConfigFile = "setting.yaml" //配置文件的位置
+const ConfigFile = "settings.yaml" //配置文件的位置
 
 func InitConf() {
 	c := &config.Config{} //c 可以被用来指向 Config 结构体实例，并且可以通过该指针来访问或修改结构体的字段。
